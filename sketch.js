@@ -1,21 +1,31 @@
-const CELL_SIZE = 50
-const OFFSET = 12
-const SHAPE_SIZE = CELL_SIZE - 2*OFFSET
+let CELL_SIZE = 70
+let SHAPE_SIZE = 30
 // layout
-const MARGIN = 0
-const COLUMNS = 8
-const ROWS = 8
-const PADDING = 0
-const GRIDBOX = CELL_SIZE + PADDING
-const START = (CELL_SIZE / 2) + MARGIN
+let MARGIN = 0
+let COLUMNS = 9
+let ROWS = 9
+let PADDING = 0
+let GRIDBOX = CELL_SIZE + PADDING
+let START = (CELL_SIZE / 2) + MARGIN
 
 let PALETTE = []
 let PALETTE_HEX = []
 let choice = 0
 let token = true
 
+let val = 0
+let val2 = 0
+let val3 = 8
+let val4 = 8
+let val5 = 1
+
+let shapes_coord = [30]
+//console.log(shapes_coord)
+
+
+
 function getRandomPalette(palette) {
-  const rando2 = floor(random(0,5));
+  const rando2 = floor(random(0,7));
   switch (rando2) {
     case 0:
       palette = PALETTE_HEX_BLUE
@@ -28,7 +38,7 @@ function getRandomPalette(palette) {
   }
   switch (rando2) {
     case 2:
-      palette = PALETTE_HEX_PINK
+      palette = PALETTE_HEX_PURPLE
       break;
   }
   switch (rando2) {
@@ -39,6 +49,16 @@ function getRandomPalette(palette) {
   switch (rando2) {
     case 4:
       palette = PALETTE_HEX_RED
+      break;
+  }
+  switch (rando2) {
+    case 5:
+      palette = PALETTE_HEX_PINK
+      break;
+  }
+  switch (rando2) {
+    case 6:
+      palette = PALETTE_HEX_GREEN2
       break;
   }
     
@@ -98,54 +118,105 @@ function myTriangle (center, radius, direction) {
     endShape(CLOSE);
   }
 }
+function reset_tab() {
+  
+  for(let i = 0 ; i < 50 ; i++) {
+    shapes_coord[i]=[30]
+  }
+}
+
+function generate() {
+  //console.log(CELL_SIZE)
+  console.log(val3)
+  console.log(val4)
+  CELL_SIZE = val
+  reset_tab();
+  if(val4*CELL_SIZE <= 700) {
+    ROWS = val4
+  }
+  else {
+    ROWS = floor(640/CELL_SIZE) 
+  }
+
+  if(val3*CELL_SIZE <= 640) {
+    COLUMNS = val3
+  }
+  else {
+    COLUMNS = floor(640/CELL_SIZE) 
+  }
+  if(val2 <= CELL_SIZE-int(0.30*CELL_SIZE)) {
+    SHAPE_SIZE = val2
+  }
+  else {
+    SHAPE_SIZE = CELL_SIZE-int(0.30*CELL_SIZE)
+  }
+  token = true
+  background(255,0)
+}
 
 function setup() {
   const totalX = 2*START + GRIDBOX * COLUMNS
   const totalY = 2*START + GRIDBOX * ROWS
+  //SHAPE_SIZE = CELL_SIZE-int(0.60*CELL_SIZE)
   PALETTE = [
-    [253, 224, 58], //yellow
+    [252, 195, 2], //yellow
     //[167, 186, 204], //light blue gray 
     [223, 45, 32], // red
+    [0, 0, 0],
     [91, 176, 52]
 
   ]
   PALETTE_HEX_BLUE = [
-    ['#03045E'],
-    ['#023E8A'],
-    ['#0077B6'],
-    ['#0096C7'],
-    ['#00B4D8']
+    ['#3d5680'],
+    ['#445f8e'],
+    ['#576f99'],
+    ['#697fa5'],
+    ['#7c8fb0']
   ]
   PALETTE_HEX_GREEN = [
-    ['#081C15'],
-    ['#1B4332'],
-    ['#2D6A4F'],
-    ['#40916C'],
-    ['#52B788']
+    ['#304a31'],
+    ['#365437'],
+    ['#3c5d3d'],
+    ['#506d50'],
+    ['#637d64']
   ]
-  PALETTE_HEX_PINK = [
-    ['#ffdab9'],
-    ['#fbc4ab'],
-    ['#f8ad9d'],
-    ['#f4978e'],
-    ['#f08080']
+  PALETTE_HEX_GREEN2= [
+    ['#72863c'],
+    ['#819644'],
+    ['#8fa74b'],
+    ['#9ab05d'],
+    ['#a5b96f']
+  ]
+  PALETTE_HEX_PURPLE= [
+    ['#61475c'],
+    ['#6e516a'],
+    ['#7c5b77'],
+    ['#8a6584'],
+    ['#967490']
   ]
   PALETTE_HEX_ORANGE= [
-    ['#ff4800'],
-    ['#ff5400'],
-    ['#ff6000'],
-    ['#ff6d00'],
-    ['#ff7900']
+    ['#e8781f'],
+    ['#e8781f'],
+    ['#ea8635'],
+    ['#ea8635'],
+    ['#ed934c']
+  ]
+  PALETTE_HEX_PINK= [
+    ['#93535f'],
+    ['#a65e6b'],
+    ['#b86877'],
+    ['#bf7785'],
+    ['#c68692']
   ]
   PALETTE_HEX_RED= [
-    ['#9c191b'],
-    ['#ac1c1e'],
-    ['#bd1f21'],
-    ['#d02224'],
-    ['#dd2c2f']
+    ['#ae3326'],
+    ['#c33a2b'],
+    ['#d94030'],
+    ['#dd5345'],
+    ['#e16659']
   ]
 
-  createCanvas(totalX, totalY, SVG);
+  createCanvas(660, 660, SVG);
   //noLoop()
   angleMode(DEGREES)
   rectMode(CENTER)
@@ -156,9 +227,64 @@ function setup() {
   radio.option('losange');
   radio.style('width', '70px');
   textAlign(CENTER);
-  radio.position(650,20)
+  radio.position(750,20)
   radio.value('carré')
+
+  slider = createSlider(30, 80, 70, 5);
+  slider.position(750, 100);
+  slider.style('width', '80px');
+
+  button = createButton('Refresh');
+  button.position(750, 350);
+  button.mousePressed(generate);
+
+  slider_sh = createSlider(0, 70, 30, 5);
+  slider_sh.position(750, 150);
+  slider_sh.style('width', '80px');
+
+  slider_p = createSlider(1, 3, 1, 1);
+  slider_p.position(750, 200);
+  slider_p.style('width', '80px');
+
+  //slider_co = createSlider(1, 20, 8, 1);
+  //slider_co.position(750, 200);
+  //slider_co.style('width', '80px');
+
+  myInput = createInput();
+  myInput.position(750, 250);
+  myInput.style('width', '60px');
+  myInput.value('9')
+
+  myInput2 = createInput();
+  myInput2.position(750, 300);
+  myInput2.style('width', '60px');
+  myInput2.value('9')
+
+  let h5 = createElement('p', 'Taille des cellules');
+  h5.style('black', '#00a1d3');
+  h5.position(840, 85);
+
+  let h6 = createElement('p', 'Taille des formes');
+  h6.style('black', '#00a1d3');
+  h6.position(840, 135);
+
+  let h7 = createElement('p', 'Nombre de colonnes');
+  h7.style('black', '#00a1d3');
+  h7.position(840, 235);
+
+  let h8 = createElement('p', 'Nombre de lignes');
+  h8.style('black', '#00a1d3');
+  h8.position(840, 285);
+
+  let h9 = createElement('p', 'Taille du pinceau');
+  h9.style('black', '#00a1d3');
+  h9.position(840, 185);
+
+  for(let i = 0 ; i < 50 ; i++) {
+    shapes_coord[i]=[30]
+  }
 }
+//console.log(shapes_coord)
 
 //picker for colors 
 //picker for forms
@@ -167,40 +293,51 @@ function setup() {
 function mouseClicked() {
   let coordX = floor(mouseX/(CELL_SIZE))
   let coordY = floor(mouseY/(CELL_SIZE))
-  const posX = START + ((coordX) * GRIDBOX)
-  const posY = START + ((coordY) * GRIDBOX)
+  const posX = (CELL_SIZE / 2) + ((coordX) * CELL_SIZE)
+  const posY = (CELL_SIZE / 2) + ((coordY) * CELL_SIZE)
 
-  console.log(coordX)
-  console.log(coordY)
+ // console.log(coordX)
+ // console.log(coordY)
   //console.log(coordX)
   //console.log(coordY)
   //console.log(floor(mouseX/(COLUMNS)))
   //console.log(mouseY)
   //console.log(width)
-  push()
+ /* push()
           translate(posX, posY)
           noStroke()
           fill(PALETTE[0])
           //drawRandomShape(0,0)
-          if(posX < (width-CELL_SIZE) && posY < (height-CELL_SIZE)) {
+          if(posX <= ((CELL_SIZE*COLUMNS) + CELL_SIZE/3) && posY <= ((CELL_SIZE*ROWS)+CELL_SIZE/3)) {
             drawShape(0,0,choice)
           }
-          pop()
-/*    for (let x = -1; x < 2; x++) {
-      for (let y = -1; y < 2; y++) {
-        const posX = START + ((coordX+x) * GRIDBOX)
-        const posY = START + ((coordY+y) * GRIDBOX)
-        if(posX < (width-CELL_SIZE) && posY < (height-CELL_SIZE)) {
-          push()
-          translate(posX, posY)
-          noStroke()
-          fill(PALETTE[0])
-          //drawRandomShape(0,0)
-          drawShape(0,0,choice)
-          pop()
-        } 
+          pop() */
+
+  for (let x = -val5+1; x < val5; x++) {
+      for (let y = -val5+1; y < val5; y++) {
+        const posX = (CELL_SIZE / 2) + ((coordX+x) * CELL_SIZE)
+        const posY = (CELL_SIZE / 2) + ((coordY+y) * CELL_SIZE)
+        if((coordX+x >=0) && (coordY+y >=0)) {
+          if(shapes_coord[coordX+x][coordY+y] !=1 ) {
+            if(posX <= ((CELL_SIZE*COLUMNS) + CELL_SIZE/3) && posY <= ((CELL_SIZE*ROWS)+CELL_SIZE/3)) {
+              push()
+              translate(posX, posY)
+              noStroke()
+              fill('#eccc35')
+              //drawRandomShape(0,0)
+              drawShape(0,0,choice)
+              pop()
+              shapes_coord[coordX+x][coordY+y] = 1
+            } 
+          }
+        }
       }
-    } */
+    } 
+}
+
+function keyPressed() {
+  if (keyCode === ENTER) {
+    generate() }
 }
 
 function draw() {
@@ -210,24 +347,56 @@ function draw() {
   //background(230);
   let remain = 4
   let color = 0
-  let palette = PALETTE_HEX_BLUE
+  let palette
+  let rando = int(random(0,7))
+  switch (rando) {
+    case 0 :
+      palette = PALETTE_HEX_BLUE
+      break;
+    case 1 :
+      palette = PALETTE_HEX_GREEN
+      break;
+    case 2 :
+      palette = PALETTE_HEX_PURPLE
+      break;
+    case 3 :
+      palette = PALETTE_HEX_ORANGE
+      break;
+    case 4 :
+      palette = PALETTE_HEX_RED
+      break;
+    case 5 :
+      palette = PALETTE_HEX_PINK
+      break;
+    case 6 :
+      palette = PALETTE_HEX_GREEN2
+      break;
+  }
+  val = slider.value();
+  val2 = slider_sh.value();
+  val3 = myInput.value()
+  val4 = myInput2.value()
+  val5 = slider_p.value()
+
+
   if(token == true)
   {
+    //console.log(CELL_SIZE)
     for (let x = 0; x < COLUMNS; x++) {
       for (let y = 0; y < ROWS; y++) {
         if(remain == 0)
         {
           palette = getRandomPalette()
-          remain = floor(random(1,4))
+          remain = floor(random(1,5))
           //console.log(remain)
         }
-        const posX = START + (x * GRIDBOX)
-        const posY = START + (y * GRIDBOX) 
+        const posX = (CELL_SIZE / 2) + (x * CELL_SIZE)
+        const posY = (CELL_SIZE / 2) + (y * CELL_SIZE) 
         push()
         translate(posX, posY)
         noStroke()
         fill(palette[remain])
-        if(remain > 0) {
+        if(remain >= 0) {
           remain --
         }
         rect(0,0,CELL_SIZE,CELL_SIZE)
@@ -238,6 +407,8 @@ function draw() {
     }
     token = false
   }
+
+  
   choice = radio.value();
   //console.log(choice)
 }
