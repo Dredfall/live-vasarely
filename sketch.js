@@ -1,5 +1,5 @@
 let CELL_SIZE = 70
-let SHAPE_SIZE = 30
+let SHAPE_SIZE = 40
 // layout
 let MARGIN = 0
 let COLUMNS = 9
@@ -20,6 +20,7 @@ let val4 = 8
 let val5 = 1
 
 let shapes_coord = [30]
+let toggle = false
 //console.log(shapes_coord)
 
 
@@ -81,16 +82,82 @@ function drawRandomShape(posX,posY) {
 }
 
 function drawShape(posX,posY) {
-  if(choice == 'carré') {
-    rect(posX,posY,SHAPE_SIZE,SHAPE_SIZE)  
+  let palette = getRandomPalette()
+  if(choice == 'Carré') {
+    if(toggle) {
+      rect(posX,posY,SHAPE_SIZE,SHAPE_SIZE) 
+      fill(palette[3])
+      rect(posX,posY,0.3*SHAPE_SIZE,0.3*SHAPE_SIZE) 
+    }
+    else {
+      rect(posX,posY,SHAPE_SIZE,SHAPE_SIZE) 
+    }
+     
   } 
-  else if(choice == 'losange') {
-    rotate(45)
-    rect(posX,posY,0.8*SHAPE_SIZE,0.8*SHAPE_SIZE)  
+  else if(choice == 'Losange') {
+    if(toggle) {
+
+      rotate(45)
+      rect(posX,posY,0.8*SHAPE_SIZE,0.8*SHAPE_SIZE)
+      fill(palette[3])
+      rect(posX,posY,0.3*SHAPE_SIZE,0.3*SHAPE_SIZE)
+    }
+    else {
+      rotate(45)
+      rect(posX,posY,0.8*SHAPE_SIZE,0.8*SHAPE_SIZE) 
+    }
+     
   } 
-  else  {
-    ellipse(posX,posY, SHAPE_SIZE,SHAPE_SIZE)
+  else if(choice == 'Triangle Gauche') {
+    if(toggle) { 
+      myTriangle(0.1*SHAPE_SIZE,0.6*SHAPE_SIZE,1)
+      fill(palette[3])
+      myTriangle(0.1*SHAPE_SIZE,0.2*SHAPE_SIZE,1)
+    }
+    else {
+      myTriangle(0.1*SHAPE_SIZE,0.6*SHAPE_SIZE,1)
+    }
   } 
+  else if(choice == 'Triangle Droite') {
+    if(toggle) { 
+      myTriangle(-0.1*SHAPE_SIZE,0.6*SHAPE_SIZE,0)
+      fill(palette[3])
+      myTriangle(-0.1*SHAPE_SIZE,0.2*SHAPE_SIZE,0)
+    }
+    else {
+      myTriangle(-0.1*SHAPE_SIZE,0.6*SHAPE_SIZE,0)
+    }
+  } 
+  else if(choice == 'Triangle Haut') {
+    if(toggle) { 
+      myTriangle(0,0.6*SHAPE_SIZE,3)
+      fill(palette[3])
+      myTriangle(0,0.2*SHAPE_SIZE,3)
+    }
+    else {
+      myTriangle(0,0.6*SHAPE_SIZE,3)
+    }
+  } 
+  else if(choice == 'Triangle Bas') {
+    if(toggle) { 
+      myTriangle(0,0.6*SHAPE_SIZE,2)
+      fill(palette[3])
+      myTriangle(0,0.2*SHAPE_SIZE,2)
+    }
+    else {
+      myTriangle(0,0.6*SHAPE_SIZE,2)
+    }
+  } 
+  else {
+    if(toggle) { 
+      ellipse(posX,posY, SHAPE_SIZE,SHAPE_SIZE)
+      fill(palette[3])
+      ellipse(posX,posY, 0.3*SHAPE_SIZE,0.3*SHAPE_SIZE)
+    }
+    else {
+      ellipse(posX,posY, SHAPE_SIZE,SHAPE_SIZE)
+    }
+  }
 }
 
 function randomSelectTwo() {
@@ -104,17 +171,29 @@ function randomSelectTwo() {
 }
 
 function myTriangle (center, radius, direction) {
-  if (direction) {
+  if (direction == 0) {
     beginShape();
-    vertex(center + radius * cos(60), radius * sin(60));
-    vertex(center + radius * cos(300), radius * sin(300));
-    vertex(center + radius * cos(180), radius * sin(180));
+    vertex(center + radius * cos(0), radius * sin(0));
+    vertex(center + radius * cos(120), radius * sin(120));
+    vertex(center + radius * cos(240), radius * sin(240));
     endShape(CLOSE); 
-  } else {
+  } else if (direction == 1) {
     beginShape();
     vertex(center + radius * cos(180), radius * sin(180));
     vertex(center + radius * cos(300), radius * sin(300));
     vertex(center + radius * cos(60), radius * sin(60));
+    endShape(CLOSE);
+  } else if (direction == 2) {
+    beginShape();
+    vertex(center + radius * cos(90), radius * sin(90));
+    vertex(center + radius * cos(210), radius * sin(210));
+    vertex(center + radius * cos(330), radius * sin(330));
+    endShape(CLOSE);
+  }  else if (direction == 3) {
+    beginShape();
+    vertex(center + radius * cos(270), radius * sin(270));
+    vertex(center + radius * cos(30), radius * sin(30));
+    vertex(center + radius * cos(150), radius * sin(150));
     endShape(CLOSE);
   }
 }
@@ -152,6 +231,14 @@ function generate() {
   }
   token = true
   background(255,0)
+}
+
+function myCheckedEvent() {
+  if (this.checked()) {
+    toggle = true
+  } else {
+    toggle = false
+  }
 }
 
 function setup() {
@@ -222,28 +309,34 @@ function setup() {
   rectMode(CENTER)
 
   radio = createRadio();
-  radio.option('carré');
-  radio.option('cercle');
-  radio.option('losange');
-  radio.style('width', '70px');
+  radio.option('Carré');
+  radio.option('Losange');
+  radio.option('Cercle');
+  radio.option('Triangle Haut');
+  radio.option('Triangle Bas');
+  radio.option('Triangle Gauche');
+  radio.option('Triangle Droite');
+  radio.value('Carré')
+
+  radio.style('width', '30px');
   textAlign(CENTER);
-  radio.position(750,20)
+  radio.position(800,20)
   radio.value('carré')
 
   slider = createSlider(30, 80, 70, 5);
-  slider.position(750, 100);
+  slider.position(800, 375);
   slider.style('width', '80px');
 
   button = createButton('Refresh');
-  button.position(750, 350);
+  button.position(800, 660);
   button.mousePressed(generate);
 
-  slider_sh = createSlider(0, 70, 30, 5);
-  slider_sh.position(750, 150);
+  slider_sh = createSlider(0, 70, 40, 5);
+  slider_sh.position(800, 425);
   slider_sh.style('width', '80px');
 
   slider_p = createSlider(1, 3, 1, 1);
-  slider_p.position(750, 200);
+  slider_p.position(800, 475);
   slider_p.style('width', '80px');
 
   //slider_co = createSlider(1, 20, 8, 1);
@@ -251,34 +344,38 @@ function setup() {
   //slider_co.style('width', '80px');
 
   myInput = createInput();
-  myInput.position(750, 250);
+  myInput.position(800, 525);
   myInput.style('width', '60px');
   myInput.value('9')
 
   myInput2 = createInput();
-  myInput2.position(750, 300);
+  myInput2.position(800, 575);
   myInput2.style('width', '60px');
   myInput2.value('9')
 
   let h5 = createElement('p', 'Taille des cellules');
   h5.style('black', '#00a1d3');
-  h5.position(840, 85);
+  h5.position(890, 360);
 
   let h6 = createElement('p', 'Taille des formes');
   h6.style('black', '#00a1d3');
-  h6.position(840, 135);
+  h6.position(890, 410);
 
   let h7 = createElement('p', 'Nombre de colonnes');
   h7.style('black', '#00a1d3');
-  h7.position(840, 235);
+  h7.position(890, 510);
 
   let h8 = createElement('p', 'Nombre de lignes');
   h8.style('black', '#00a1d3');
-  h8.position(840, 285);
+  h8.position(890, 560);
 
   let h9 = createElement('p', 'Taille du pinceau');
   h9.style('black', '#00a1d3');
-  h9.position(840, 185);
+  h9.position(890, 460);
+
+  checkbox = createCheckbox('Formes internes', false);
+  checkbox.changed(myCheckedEvent);
+  checkbox.position(800, 620);
 
   for(let i = 0 ; i < 50 ; i++) {
     shapes_coord[i]=[30]
