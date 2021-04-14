@@ -331,7 +331,7 @@ function setup() {
   button.position(800, 660);
   button.mousePressed(generate);
 
-  slider_sh = createSlider(5, 70, 40, 5);
+  slider_sh = createSlider(10, 70, 40, 5);
   slider_sh.position(800, 425);
   slider_sh.style('width', '80px');
 
